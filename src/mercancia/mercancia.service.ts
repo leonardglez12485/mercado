@@ -136,7 +136,7 @@ export class MercanciaService {
   //==================================
   //Buscar Mercancia por departamento
   //==================================
-
+  
   async mercaDepto(term: string) {
     let depto: Departamento;
     //busqueda por ID

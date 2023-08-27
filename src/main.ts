@@ -20,9 +20,10 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('API')
-    .setDescription('API MErcado')
+    .setDescription('API Mercado')
     .setVersion('1.0')
     .addTag('Mercado')
+    .addApiKey({type: 'apiKey', name: 'Mercado', in: 'header'}, 'Api-Key')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/docs', app, document);

@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { MercanciaService } from './mercancia.service';
 import { CreateMercanciaDto } from './dto/create-mercancia.dto';
 import { UpdateMercanciaDto } from './dto/update-mercancia.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiTags('mercancia')
@@ -11,6 +11,7 @@ export class MercanciaController {
   constructor(private readonly mercanciaService: MercanciaService) {}
 
   @Post()
+  @ApiResponse({status: 201, description: 'Mercancia creada'})
   create(@Body() createMercanciaDto: CreateMercanciaDto) {
     return this.mercanciaService.create(createMercanciaDto);
   }
