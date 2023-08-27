@@ -25,7 +25,7 @@ async function bootstrap() {
     .addTag('Mercado')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('/docs', app, document);
   await app.listen(process.env.PORT);
   console.log(`App Running al Port ${process.env.PORT}`)
 }
