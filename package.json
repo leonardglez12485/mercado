@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "description": "",
   "author": "",
+  "main": "dist/main.js",
   "private": true,
   "license": "UNLICENSED",
   "engines": {
-    "node": "18.x"
+    "node": "19.7.0"
   },
 
   "scripts": {

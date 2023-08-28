@@ -28,7 +28,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/docs', app, document);
   app.enableCors();
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.PORT ||3001)
   console.log(`App Running al Port ${process.env.PORT}`)
 }
 bootstrap();
