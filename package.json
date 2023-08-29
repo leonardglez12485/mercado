@@ -6,9 +6,7 @@
   "main": "dist/main.js",
   "private": true,
   "license": "UNLICENSED",
-  "engines": {
-    "node": "19.7.0"
-  },
+
 
   "scripts": {
     "build": "nest build",
