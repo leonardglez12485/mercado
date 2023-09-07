@@ -6,7 +6,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 
-@ApiTags('departamento')
+@ApiTags('Departamento')
 @Controller('departamento')
 export class DepartamentoController {
   constructor(

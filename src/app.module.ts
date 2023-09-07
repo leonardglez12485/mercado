@@ -13,6 +13,8 @@ import { envConfiguration } from './config/app.config';
 import { join } from 'path';
 import { SeedModule } from './seed/seed.module';
 import { env } from 'process';
+import { FilesModule } from './files/files.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -27,12 +29,15 @@ import { env } from 'process';
     DepartamentoModule,
     TrabajadorModule,
     MercanciaModule,
-    SeedModule
+    SeedModule,
+    FilesModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
- constructor(){
+ constructor(){ 
+
  }
 }

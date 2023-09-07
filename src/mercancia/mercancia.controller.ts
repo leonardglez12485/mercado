@@ -5,7 +5,7 @@ import { UpdateMercanciaDto } from './dto/update-mercancia.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 
-@ApiTags('mercancia')
+@ApiTags('Mercancia')
 @Controller('mercancia')
 export class MercanciaController {
   constructor(private readonly mercanciaService: MercanciaService) {}

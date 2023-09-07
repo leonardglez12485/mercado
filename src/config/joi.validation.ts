@@ -1,6 +1,5 @@
 
 import * as Joi from 'joi';
-import { isValidObjectId } from 'mongoose';
 
 export const JoiValidationSchema = Joi.object({
 MONGODB: Joi.required(),
