@@ -25,7 +25,9 @@ import { AuthModule } from './auth/auth.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname,'..','public'),
       }),
-    MongooseModule.forRoot(process.env.MONGODB),
+    MongooseModule.forRoot(process.env.MONGODB, {
+      dbName: 'nest-mercado',
+    }),
     DepartamentoModule,
     TrabajadorModule,
     MercanciaModule,

@@ -6,6 +6,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { IsEmail } from 'class-validator';
 import { ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { JwtPayloadInterface } from './interfaces/jwt-payload.interface';
+import { JwtService } from '@nestjs/jwt';
 
 
 
@@ -13,18 +15,21 @@ import { ApiUnauthorizedResponse } from '@nestjs/swagger';
 export class AuthService {
 
   constructor(
-    @InjectModel(User.name) private userM: Model<UserDocument>
+    @InjectModel(User.name) private userM: Model<UserDocument>,
+    private readonly jwtService: JwtService
   ) { }
 
-  async create(createUserDto: CreateUserDto): Promise<UserDocument> {
+  async create(createUserDto: CreateUserDto) {
     try {
       const { password, ...userData } = createUserDto;
       const user = await this.userM.create({
         ...userData,
         password: bcrypt.hashSync(password, 10)
       });
-      delete user.password;
-      return user;
+      return {
+        user,
+        token: this.getJwtToken({email: user.email})
+     };
     } catch (error) {
       this.handleErrors(error);
     }
@@ -57,9 +62,18 @@ export class AuthService {
     if (await (user.validatePassword(loginUserDto.password)) === false) throw new HttpException('Wrong credentials', HttpStatus.FORBIDDEN);
     let userType: string = user.roles;
     if(!user) throw new UnauthorizedException(`Email ${loginUserDto.email} not valid`)
-    return user;
+    return {
+     user,
+     token: this.getJwtToken({email: user.email})
+  };
 
   }
+
+  private getJwtToken(payload: JwtPayloadInterface){
+   const token = this.jwtService.sign(payload);
+   return token;
+  }
+    
 
   //===========================
   //===Manejando los Errores===
