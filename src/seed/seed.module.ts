@@ -4,6 +4,7 @@ import { SeedController } from './seed.controller';
 import { MercanciaModule } from 'src/mercancia/mercancia.module';
 import { TrabajadorModule } from 'src/trabajador/trabajador.module';
 import { DepartamentoModule } from 'src/departamento/departamento.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [SeedController],
@@ -11,7 +12,8 @@ import { DepartamentoModule } from 'src/departamento/departamento.module';
   imports:[
     DepartamentoModule,
     MercanciaModule,
-    TrabajadorModule
+    TrabajadorModule,
+    AuthModule
   ],
   exports:[SeedService]
 })

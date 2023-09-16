@@ -4,6 +4,7 @@ import { DepartamentoController } from './departamento.controller';
 import { Departamento, DepartamentoSchema } from './entities/departamento.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
+import { AuthModule } from '../auth/auth.module';
 
 
 @Module({
@@ -16,6 +17,7 @@ import { ConfigService } from '@nestjs/config';
        schema: DepartamentoSchema,
       }
     ]),
+    AuthModule
   ],
   exports:[
     DepartamentoModule,

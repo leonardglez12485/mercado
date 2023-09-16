@@ -23,7 +23,7 @@ export class User {
     isActive?: boolean;
 
     @Prop({default: 'user'})
-    roles?: Role;
+    roles?: Role[];
 
 
     //Functions

@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Mercancia, MercanciaSchema } from './entities/mercancia.entity';
 import { DepartamentoModule } from 'src/departamento/departamento.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 
 @Module({
@@ -19,8 +20,8 @@ import { DepartamentoModule } from 'src/departamento/departamento.module';
       },
 
     ]),
-    DepartamentoModule
-    
+    DepartamentoModule,
+    AuthModule
   ],
   exports:[
     MongooseModule,

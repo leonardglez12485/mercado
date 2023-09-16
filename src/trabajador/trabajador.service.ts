@@ -93,7 +93,7 @@ export class TrabajadorService {
   //======================
   private hadleException(error: any) {
     if (error.code === 11000) {
-      throw new BadRequestException(`Mercancia exists in DB ${JSON.stringify(error.keyValue)}`);
+      throw new BadRequestException(`Trabajador exists in DB ${JSON.stringify(error.keyValue)}`);
     }
     console.log({ error });
     throw new InternalServerErrorException(`Can't create Trabajador - Check server logs `);

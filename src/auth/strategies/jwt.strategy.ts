@@ -24,8 +24,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayloadInterface):Promise<User> {
-    const {email} = payload;
-    const userDB = await this.userM.findOne({email});
+    const {_id} = payload;
+    const userDB = await this.userM.findOne({_id});
     if(!userDB) throw new UnauthorizedException('Token not valid')
     // const permissionDB = await this.caslPermModel.findOne({email: userDB.email})
     //TODO fix if no user found response

@@ -8,6 +8,7 @@ import { IsEmail } from 'class-validator';
 import { ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtPayloadInterface } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from './enums/role.enum';
 
 
 
@@ -28,7 +29,7 @@ export class AuthService {
       });
       return {
         user,
-        token: this.getJwtToken({email: user.email})
+        token: this.getJwtToken({_id: user._id.toString()})
      };
     } catch (error) {
       this.handleErrors(error);
@@ -60,11 +61,11 @@ export class AuthService {
     const user = await this.userM.findOne({ email: loginUserDto.email.toLowerCase() });
     if (!user.isActive) throw new HttpException('User is disabled', HttpStatus.FORBIDDEN);
     if (await (user.validatePassword(loginUserDto.password)) === false) throw new HttpException('Wrong credentials', HttpStatus.FORBIDDEN);
-    let userType: string = user.roles;
+    let userType: Role[] = user.roles;
     if(!user) throw new UnauthorizedException(`Email ${loginUserDto.email} not valid`)
     return {
      user,
-     token: this.getJwtToken({email: user.email})
+     token: this.getJwtToken({_id: user._id.toString()})
   };
 
   }

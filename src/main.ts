@@ -30,7 +30,8 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
   app.enableCors();
   await app.listen(process.env.PORT ||3001)
-  log.log(`App Running al Port ${process.env.PORT}`)
+  log.log(`App Running at Port ${process.env.PORT}`)
+  log.log(`App Connected to ${process.env.MONGODB}`)
   
 }
 bootstrap();
