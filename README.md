@@ -37,8 +37,8 @@ yarn start:dev
 # Contactenos
 
 - Author - [Leonard Gonzalez](https://leonardglez12485.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Website - [https://nestjs.com](https://portafolio-lyart-theta.vercel.app/)
+- Linkedin - [@nestframework](https://twitter.com/nestframework)
 
 # Licencia
 

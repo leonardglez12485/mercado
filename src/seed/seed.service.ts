@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { User } from '../auth/entities/user.entity';
+import { Role } from 'src/auth/enums/role.enum';
 import { CreateDepartamentoDto } from 'src/departamento/dto/create-departamento.dto';
 import { Departamento } from 'src/departamento/entities/departamento.entity';
 import { CreateMercanciaDto } from 'src/mercancia/dto/create-mercancia.dto';
 import { Mercancia } from 'src/mercancia/entities/mercancia.entity';
 import { CreateTrabajadorDto } from 'src/trabajador/dto/create-trabajador.dto';
 import { Trabajador } from 'src/trabajador/entities/trabajador.entity';
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class SeedService {
@@ -15,18 +19,23 @@ export class SeedService {
   @InjectModel(Mercancia.name) private readonly mercaModel: Model<Mercancia>,
   @InjectModel(Departamento.name) private readonly deptoModel: Model<Departamento>,
   @InjectModel(Trabajador.name) private readonly trabModel: Model<Trabajador>,
-
+  @InjectModel(User.name) private readonly userModel: Model<User>,
  ){} 
-
 
    //Seed 
    async excecuteSeed(){
-    const trab= await this.trabModel.find().countDocuments();
-    const dpto= await this.deptoModel.find().countDocuments();
-    const merca= await this.mercaModel.find().countDocuments();
+    let trab: Trabajador;
+    let dpto: Departamento;
+    let merca: Mercancia;
     
-    if(dpto===0){
-      this.excecuteDepartamento();
+    if(await this.deptoModel.find().countDocuments()===0){
+      dpto = await this.excecuteDepartamento();
+    }
+    if(await this.trabModel.find().countDocuments()===0){
+      trab = await this.excecuteTrabajador(dpto);
+    }
+    if(await this.mercaModel.find().countDocuments()===0){
+      merca = await this.excecuteMercancia(dpto, trab);
     }
    }
 //    async excecuteMercancia(): Promise<Mercancia> {
@@ -46,32 +55,61 @@ export class SeedService {
 //  }
 
     //Seed Departamento
-    async excecuteDepartamento(): Promise<Departamento> {
+    async excecuteDepartamento() : Promise<Departamento>{
         try {
            let depto: CreateDepartamentoDto = {
             nombre: 'Bebidas Frias',
             cant_trab: 10,
-            cant_producto: 0,
+            cant_producto: 1,
             is_empty: false 
           }
-          return await this.deptoModel.create(depto);
+          const seedDepto = await this.deptoModel.create(depto);
+          return seedDepto;
+        } catch (error) {
+          throw error;
+        }   
+     }
+
+    //Seed trabajador
+    async excecuteTrabajador(dep: Departamento): Promise<Trabajador>{
+        try {
+           let user: User={
+            fullName: 'Test',
+            email: 'test@gmail.com',
+            password: '123456Aa.',
+            roles: [Role.admin],
+           }
+           user.password = bcrypt.hashSync(user.password, 10);
+           const newUser = await this.userModel.create(user);
+           let trab: Trabajador = {
+            fullName: 'Test',
+            email: user.email,
+            user: newUser, 
+            ci: 74051219384,
+            depto: dep,
+          }
+          const seedTrab= await this.trabModel.create(trab);
+          return seedTrab;
         } catch (error) {
           throw error;
         }
-        
      }
 
-     //Seed trabajador
-    // async excecuteTrabajador(): Promise<Trabajador> {
-    //     try {
-    //        let trab: CreateTrabajadorDto = {
-    //         nombre: 'Leonard Gonzalez',
-    //         ci: 85041219382,
-    //         depto: null
-    //       }
-    //       return await this.trabModel.create(trab);
-    //     } catch (error) {
-    //       throw error;
-    //     }
-    //  }
+     async excecuteMercancia(dep: Departamento, trab: Trabajador): Promise<Mercancia>{
+      try {
+         let merca: CreateMercanciaDto = {
+          nombre: 'Refresco Cola',
+          depto: dep,
+          disponible: true,
+          cantidad: 1000,
+          precio: 220.00,
+          fechaEntrada: new Date().toString(),
+          trab: trab
+        }
+        const seedMerca =  await this.mercaModel.create(merca);
+        return seedMerca;
+      } catch (error) {
+        throw error;
+      }
+   }
 }

@@ -1,6 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument, SchemaTypes } from "mongoose";
 import { Departamento } from "src/departamento/entities/departamento.entity";
+import { Trabajador } from 'src/trabajador/entities/trabajador.entity';
 
 export enum Unidades {
   UNIDAD= 'UNIDAD',
@@ -36,6 +37,9 @@ fechaEntrada?: string;
 
 @Prop({ required: false, unique: false, default: 'UNIDAD'})
 unidades?: Unidades;
+
+@Prop({ type: SchemaTypes.ObjectId, ref: 'Trabajador', required: false})
+trab: Trabajador;
 
 }
 

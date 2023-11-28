@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
-import { Role } from "../enums/role.enum";
 import * as bcrypt from 'bcrypt';
+import { Role } from "../enums/role.enum";
 
 
 export type UserDocument = HydratedDocument<User>;
@@ -31,8 +31,16 @@ export class User {
 
 }
 const UserSchema = SchemaFactory.createForClass(User);
-export { UserSchema };
+
+UserSchema.methods.toJSON = function () {
+  let obj = this.toObject();
+  delete obj.password;
+  delete obj.activationToken;
+  return obj;
+}
 
 UserSchema.methods.validatePassword = async function (password: string): Promise<boolean> {
     return await bcrypt.compareSync(password, this.password);
   };
+
+export { UserSchema };

@@ -9,16 +9,17 @@ import { TrabajadorModule } from './trabajador/trabajador.module';
 import { MercanciaModule } from './mercancia/mercancia.module';
 import { JoiValidationSchema } from './config/joi.validation';
 import { envConfiguration } from './config/app.config';
-
 import { join } from 'path';
 import { SeedModule } from './seed/seed.module';
-import { env } from 'process';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
+import { MessagesWsModule } from './messages-ws/messages-ws.module';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       load: [envConfiguration],
       validationSchema: JoiValidationSchema
     }),
@@ -33,10 +34,12 @@ import { AuthModule } from './auth/auth.module';
     MercanciaModule,
     SeedModule,
     FilesModule,
-    AuthModule
+    AuthModule,
+    MessagesWsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports:[AppModule],
 })
 export class AppModule {
  constructor(){
