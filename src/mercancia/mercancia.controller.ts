@@ -4,8 +4,10 @@ import { MercanciaService } from './mercancia.service';
 import { CreateMercanciaDto } from './dto/create-mercancia.dto';
 import { UpdateMercanciaDto } from './dto/update-mercancia.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { Auth } from '../auth/decorators';
+import { Auth, GetUser } from '../auth/decorators';
 import { ValidRoles } from '../auth/interfaces';
+import { Trabajador } from 'src/trabajador/entities/trabajador.entity';
+import { User } from '../auth/entities/user.entity';
 
 @ApiTags('Mercancia')
 @Controller('mercancia')
@@ -14,11 +16,16 @@ export class MercanciaController {
   constructor(private readonly mercanciaService: MercanciaService) {}
 
   @Post()
-  @Auth(ValidRoles.admin, ValidRoles.super_admin)
+  @Auth(ValidRoles.worker)
   @ApiResponse({status: 201, description: 'Mercancia creada'})
-  create(@Body() createMercanciaDto: CreateMercanciaDto) {
-    return this.mercanciaService.create(createMercanciaDto);
-  }
+  create(
+    @Body() createMercanciaDto: CreateMercanciaDto,
+    @GetUser() user: User
+    ) {
+     const trab = new Trabajador;
+    // console.log(trab);
+    return this.mercanciaService.create(createMercanciaDto, trab);
+  } 
 
   @Get()
   @Auth()

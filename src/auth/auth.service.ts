@@ -1,11 +1,9 @@
 import { Injectable, BadRequestException, InternalServerErrorException, HttpStatus, HttpException, UnauthorizedException } from '@nestjs/common';
 import { UpdateUserDto, LoginUserDto, CreateUserDto } from './dto';
-import { User, UserDocument } from './entities/user.entity';
+import { User} from './entities/user.entity';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { IsEmail } from 'class-validator';
-import { ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { JwtPayloadInterface } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from './enums/role.enum';
@@ -16,7 +14,7 @@ import { Role } from './enums/role.enum';
 export class AuthService {
 
   constructor(
-    @InjectModel(User.name) private userM: Model<UserDocument>,
+    @InjectModel(User.name) private userM: Model<User>,
     private readonly jwtService: JwtService
   ) { }
 

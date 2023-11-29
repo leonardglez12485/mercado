@@ -6,7 +6,7 @@ export const fileFiler = (req: Express.Request, file: Express.Multer.File, callb
 
     const fileExtension = file.mimetype.split('/')[1];
     const validExtension = ['jpg', 'jpeg', 'png', 'gif']
-    if (!validExtension.includes(fileExtension)) return callback(new Error('Extension no permitida'), false);
+    if (!validExtension.includes(fileExtension)) return callback(new Error('Extension not allowed'), false);
     return callback(null, true);
 
 }

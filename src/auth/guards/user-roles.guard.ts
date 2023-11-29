@@ -29,6 +29,6 @@ export class UserRolesGuard implements CanActivate {
         return true;
       }
     }
-   throw new ForbiddenException(`User ${user.fullName} need a valid Role!!!`);
+   throw new ForbiddenException(`User ${user.email} need a valid Role!!!`);
   }
 }

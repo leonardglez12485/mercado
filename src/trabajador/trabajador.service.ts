@@ -5,6 +5,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Trabajador } from './entities/trabajador.entity';
 import { Model, isValidObjectId } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
+import { User, UserDocument } from 'src/auth/entities/user.entity';
+import { Role } from 'src/auth/enums/role.enum';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class TrabajadorService {
@@ -12,8 +15,8 @@ export class TrabajadorService {
   private defaultLimit: number;
 
   constructor(
-    @InjectModel(Trabajador.name)  
-    private readonly trabModel: Model<Trabajador>,
+    @InjectModel(Trabajador.name) private readonly trabModel: Model<Trabajador>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly configService: ConfigService,
   ) {
     this.defaultLimit = configService.getOrThrow<number>('default_limits')
@@ -22,16 +25,36 @@ export class TrabajadorService {
   //=========================
   //Crear un nuevo trabajador
   //=========================
-  async create(createTrabajadorDto: CreateTrabajadorDto) {
-    createTrabajadorDto.nombre = createTrabajadorDto.nombre.toLocaleLowerCase();
+  async create(dto: CreateTrabajadorDto): Promise<Trabajador> {
+    dto.fullName = dto.fullName.toLocaleLowerCase();
+    const userExist = await this.userModel.findOne({ email: dto.email });
+    const profile = await this.trabModel.findOne({ email: dto.email });
+    if (userExist || profile) throw new BadRequestException('email is already taken')
+
     try {
-      const trab = await this.trabModel.create(createTrabajadorDto);
+      const user: User = {
+        email: dto.email,
+        password: '123456Aa.',
+        roles: [Role.worker],
+        fullName: dto.fullName
+      }
+      user.password = bcrypt.hashSync(user.password, 10);
+      const newUser = await this.userModel.create(user);
+      let newTrab: Trabajador = {
+        ci: dto.ci,
+        depto: dto.depto,
+        user: newUser,
+        email: dto.email,
+        fullName: dto.fullName
+      }
+
+      const trab = await this.trabModel.create(newTrab);
       return trab;
+
     } catch (error) {
       this.hadleException(error);
     }
   }
-
   //===================
   //Buscar Trabajdaores
   //===================
@@ -68,10 +91,10 @@ export class TrabajadorService {
   //Actualiza un trabajador
   //=======================
   async update(term: string, updateTrabajadorDto: UpdateTrabajadorDto) {
-    const trab = await this.findOne(term);
+    const trab: Trabajador = await this.findOne(term);
     try {
-      await trab.updateOne(updateTrabajadorDto);
-      return { ...trab.toJSON(), ...updateTrabajadorDto };
+      // await trab.updateOne(updateTrabajadorDto);
+      // return { ...trab.toJSON(), ...updateTrabajadorDto };
     } catch (error) {
       this.hadleException(error)
     }
@@ -82,18 +105,28 @@ export class TrabajadorService {
   //=======================
 
   async remove(term: string) {
-    const {deletedCount} = await this.trabModel.deleteOne({_id:term});
-    if(deletedCount ===0){
+    const { deletedCount } = await this.trabModel.deleteOne({ _id: term });
+    if (deletedCount === 0) {
       throw new BadRequestException(`Trabajador whit ID: ${term} not Found !!!!`);
     }
   }
+
+  //============================
+  //Comprueba si existe el email
+  //=============================
+  private estaByEmail(email: string) {
+    const user = this.userModel.find({ email });
+    if (user) throw new BadRequestException('Email exist in DB !!!');
+    return true;
+  }
+
 
   //======================
   //Manejando Los Errores
   //======================
   private hadleException(error: any) {
     if (error.code === 11000) {
-      throw new BadRequestException(`Trabajador exists in DB ${JSON.stringify(error.keyValue)}`);
+      throw new BadRequestException(`${JSON.stringify(error.keyValue)}`);
     }
     console.log({ error });
     throw new InternalServerErrorException(`Can't create Trabajador - Check server logs `);

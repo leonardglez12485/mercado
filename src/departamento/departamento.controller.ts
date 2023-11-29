@@ -17,7 +17,7 @@ export class DepartamentoController {
     ) {}
 
   @Post()
-  @Auth(ValidRoles.admin, ValidRoles.super_admin)
+  @Auth(ValidRoles.admin)
   create(@Body() createDepartamentoDto: CreateDepartamentoDto) {
     return this.departamentoService.create(createDepartamentoDto);
   }

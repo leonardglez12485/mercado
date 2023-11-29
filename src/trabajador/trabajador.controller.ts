@@ -3,8 +3,8 @@ import { TrabajadorService } from './trabajador.service';
 import { CreateTrabajadorDto } from './dto/create-trabajador.dto';
 import { UpdateTrabajadorDto } from './dto/update-trabajador.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Auth } from '../auth/decorators';
-import { ValidRoles } from '../auth/interfaces';
+import { Auth, GetUser } from '../auth/decorators';
+import { JwtPayloadInterface, ValidRoles } from '../auth/interfaces';
 
 @ApiTags('Trabajador')
 @Controller('trabajador')
@@ -14,7 +14,8 @@ export class TrabajadorController {
 
   @Post()
   @Auth(ValidRoles.admin)
-  create(@Body() createTrabajadorDto: CreateTrabajadorDto) {
+  create(
+    @Body() createTrabajadorDto: CreateTrabajadorDto) {
     return this.trabajadorService.create(createTrabajadorDto);
   }
 

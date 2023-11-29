@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { Departamento } from 'src/departamento/entities/departamento.entity';
 import { Mercancia } from './entities/mercancia.entity';
+import { Trabajador } from 'src/trabajador/entities/trabajador.entity';
 
 
 
@@ -26,10 +27,11 @@ export class MercanciaService {
   //=====================
   //Crear Mercancia Nueva
   //=====================
-  async create(createMercanciaDto: CreateMercanciaDto) {
+  async create(createMercanciaDto: CreateMercanciaDto, trab: Trabajador) {
     createMercanciaDto.nombre = createMercanciaDto.nombre.toLocaleLowerCase();
     createMercanciaDto.fechaEntrada = new Date().toDateString();
     createMercanciaDto.disponible = true;
+    createMercanciaDto.trab = trab;
     if (await this.estaMercancia(createMercanciaDto.nombre)) {
       const merca = await this.mercaModel.findOneAndUpdate({ nombre: createMercanciaDto.nombre }, createMercanciaDto)
       return merca;

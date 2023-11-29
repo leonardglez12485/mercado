@@ -5,15 +5,17 @@ import { MercanciaModule } from 'src/mercancia/mercancia.module';
 import { TrabajadorModule } from 'src/trabajador/trabajador.module';
 import { DepartamentoModule } from 'src/departamento/departamento.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { TrabajadorService } from 'src/trabajador/trabajador.service';
+
 
 @Module({
   controllers: [SeedController],
-  providers: [SeedService],
+  providers: [SeedService, TrabajadorService],
   imports:[
     DepartamentoModule,
     MercanciaModule,
     TrabajadorModule,
-    AuthModule
+    AuthModule, 
   ],
   exports:[SeedService]
 })
